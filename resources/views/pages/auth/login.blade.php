@@ -50,5 +50,11 @@
             </div>
         </form>
 
+        @if (Route::has('register'))
+            <flux:text class="text-center">
+                {{ __("Don't have an account?") }}
+                <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+            </flux:text>
+        @endif
     </div>
 </x-layouts::auth>
