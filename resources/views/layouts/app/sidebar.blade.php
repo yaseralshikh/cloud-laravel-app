@@ -18,6 +18,11 @@
                     <flux:sidebar.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
                         {{ __('Users') }}
                     </flux:sidebar.item>
+                    @role('superadmin')
+                    <flux:sidebar.item icon="shield-check" :href="route('laratrust.roles.index')" :current="request()->routeIs('laratrust.*')" wire:navigate>
+                        {{ __('Roles') }}
+                    </flux:sidebar.item>
+                    @endrole
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
