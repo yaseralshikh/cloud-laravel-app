@@ -1,65 +1,51 @@
 <?php
 
+use App\Livewire\Users\Index;
 use App\Models\User;
+use Livewire\Livewire;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
-test('verified users can see the users page and search', function () {
-    $match = User::factory()->create(['name' => 'Searchable Person']);
+test('users page renders and supports search', function () {
+    User::factory()->create(['name' => 'Searchable Person']);
     User::factory()->create(['name' => 'Unrelated Person']);
 
-    $this->get(route('users.index', ['search' => 'Searchable']))
-        ->assertOk()
+    Livewire::test(Index::class)
+        ->set('search', 'Searchable')
         ->assertSee('Searchable Person')
         ->assertDontSee('Unrelated Person');
 });
 
 test('users can be created', function () {
-    $this->post(route('users.store'), [
-        'name' => 'New User',
-        'email' => 'new-user@example.com',
-        'password' => 'password123',
-        'password_confirmation' => 'password123',
-    ])
-        ->assertRedirect(route('users.index'));
+    Livewire::test(Index::class)
+        ->set('name', 'New User')
+        ->set('email', 'new-user@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('createUser')
+        ->assertHasNoErrors();
 
-    $this->assertDatabaseHas('users', [
-        'name' => 'New User',
-        'email' => 'new-user@example.com',
-    ]);
+    $this->assertDatabaseHas('users', ['email' => 'new-user@example.com', 'name' => 'New User']);
 });
 
-test('users can be updated', function () {
+test('users can be updated and deleted but not self-deleted', function () {
     $target = User::factory()->create();
 
-    $this->put(route('users.update', $target), [
-        'name' => 'Updated Name',
-        'email' => 'updated@example.com',
-        'password' => '',
-        'password_confirmation' => '',
-    ])
-        ->assertRedirect(route('users.index'));
+    Livewire::test(Index::class)
+        ->call('editUser', $target->id)
+        ->set('name', 'Updated User')
+        ->set('email', 'updated@example.com')
+        ->call('updateUser')
+        ->assertHasNoErrors();
 
-    $this->assertDatabaseHas('users', [
-        'id' => $target->id,
-        'name' => 'Updated Name',
-        'email' => 'updated@example.com',
-    ]);
-});
+    $this->assertDatabaseHas('users', ['id' => $target->id, 'name' => 'Updated User']);
 
-test('users can be deleted but cannot delete themselves', function () {
-    $target = User::factory()->create();
-
-    $this->delete(route('users.destroy', $target))
-        ->assertRedirect(route('users.index'));
-
+    Livewire::test(Index::class)->call('deleteUser', $target->id);
     $this->assertDatabaseMissing('users', ['id' => $target->id]);
 
-    $this->delete(route('users.destroy', $this->user))
-        ->assertRedirect(route('users.index'));
-
+    Livewire::test(Index::class)->call('deleteUser', $this->user->id);
     $this->assertDatabaseHas('users', ['id' => $this->user->id]);
 });
