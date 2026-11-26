@@ -56,7 +56,10 @@
 
                 <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
                     @forelse ($users as $user)
-                        @php($isSelf = $user->is(auth()->user()))
+                        @php
+                            $isSelf = $user->is(auth()->user());
+                            $isSuperadmin = $user->hasRole('superadmin');
+                        @endphp
                         <tr wire:key="user-{{ $user->id }}" class="text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-zinc-800/50">
                             <td class="px-4 py-3 sm:px-6">
                                 <div class="flex items-center gap-3">
@@ -95,8 +98,10 @@
                                             aria-label="{{ __('Edit :name', ['name' => $user->name]) }}" />
                                     </flux:tooltip>
 
-                                    @if ($isSelf)
-                                        <flux:tooltip :content="__('You cannot delete your own account.')">
+                                    @if ($isSelf || $isSuperadmin)
+                                        <flux:tooltip :content="$isSelf
+                                            ? __('You cannot delete your own account.')
+                                            : __('Superadmin accounts cannot be deleted.')">
                                             <span>
                                                 <flux:button size="sm" icon="trash" variant="ghost" disabled
                                                     aria-label="{{ __('Delete') }}" />
@@ -154,6 +159,13 @@
             <div class="space-y-4">
                 <flux:input wire:model="name" label="{{ __('Name') }}" autocomplete="off" autofocus required />
                 <flux:input wire:model="email" type="email" label="{{ __('Email') }}" autocomplete="off" required />
+
+                <flux:select wire:model="role" label="{{ __('Role') }}" placeholder="{{ __('Select role') }}">
+                    @foreach ($this->roles as $roleName => $roleLabel)
+                        <flux:select.option value="{{ $roleName }}">{{ $roleLabel }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+
                 <div class="grid gap-4 sm:grid-cols-2">
                     <flux:input wire:model="password" type="password" label="{{ __('Password') }}" autocomplete="new-password" viewable required />
                     <flux:input wire:model="password_confirmation" type="password" label="{{ __('Confirm Password') }}" autocomplete="new-password" viewable required />
@@ -178,6 +190,13 @@
             <div class="space-y-4">
                 <flux:input wire:model="name" label="{{ __('Name') }}" autocomplete="off" autofocus required />
                 <flux:input wire:model="email" type="email" label="{{ __('Email') }}" autocomplete="off" required />
+
+                <flux:select wire:model="role" label="{{ __('Role') }}" placeholder="{{ __('Select role') }}">
+                    @foreach ($this->roles as $roleName => $roleLabel)
+                        <flux:select.option value="{{ $roleName }}">{{ $roleLabel }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+
                 <div class="grid gap-4 sm:grid-cols-2">
                     <flux:input wire:model="password" type="password" label="{{ __('New Password') }}"
                         placeholder="{{ __('Leave blank to keep current password') }}" autocomplete="new-password" viewable />

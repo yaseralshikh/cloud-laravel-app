@@ -9,6 +9,9 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+use App\Models\Role;
+use Livewire\Attributes\Computed;
+
 class Index extends Component
 {
     use WithPagination;
@@ -30,6 +33,16 @@ class Index extends Component
 
     public ?int $editingUserId = null;
 
+    public string $role = '';
+
+    #[Computed]
+    public function roles(): array
+    {
+        return Role::orderBy('id')->get()
+            ->mapWithKeys(fn ($r) => [$r->name => $r->display_name ?: $r->name])
+            ->all();
+    }
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -39,6 +52,8 @@ class Index extends Component
     {
         $this->resetForm();
         $this->showCreateModal = true;
+        $this->resetValidation();
+        $this->role = 'user';
     }
 
     public function createUser(): void
@@ -47,6 +62,7 @@ class Index extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', Rule::exists('roles', 'name')],
         ]);
 
         $user = User::create([
@@ -55,7 +71,7 @@ class Index extends Component
             'password' => Hash::make($validated['password']),
         ]);
 
-        $user->addRole('user');
+        $user->syncRoles([$this->role]);
 
         $this->resetForm();
         $this->showCreateModal = false;
@@ -73,6 +89,7 @@ class Index extends Component
         $this->password_confirmation = '';
         $this->resetValidation();
         $this->showEditModal = true;
+        $this->role = $user->roles->first()?->name ?? '';
     }
 
     public function updateUser(): void
@@ -83,6 +100,7 @@ class Index extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', Rule::exists('roles', 'name')],
         ]);
 
         $user->name = $validated['name'];
@@ -90,6 +108,11 @@ class Index extends Component
 
         if ($validated['password'] !== null && $validated['password'] !== '') {
             $user->password = Hash::make($validated['password']);
+        }
+
+        // يمنع المستخدم من تغيير دوره بنفسه حتى لا يفقد صلاحية الدخول
+        if (! $user->is(auth()->user())) {
+            $user->syncRoles([$this->role]);
         }
 
         $user->save();
