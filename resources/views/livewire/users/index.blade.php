@@ -47,6 +47,7 @@
                     <tr>
                         <th scope="col" class="px-4 py-3 text-start font-medium sm:px-6">{{ __('Name') }}</th>
                         <th scope="col" class="hidden px-6 py-3 text-start font-medium md:table-cell">{{ __('Email') }}</th>
+                        <th scope="col" class="hidden px-6 py-3 text-start font-medium md:table-cell">{{ __('Role') }}</th>
                         <th scope="col" class="hidden px-6 py-3 text-start font-medium lg:table-cell">{{ __('Joined') }}</th>
                         <th scope="col" class="px-4 py-3 text-end font-medium sm:px-6">
                             <span class="sr-only">{{ __('Actions') }}</span>
@@ -78,6 +79,10 @@
 
                             <td class="hidden whitespace-nowrap px-6 py-3 text-neutral-600 md:table-cell dark:text-neutral-300">
                                 {{ $user->email }}
+                            </td>
+                            
+                            <td class="hidden whitespace-nowrap px-6 py-3 text-neutral-600 md:table-cell dark:text-neutral-300">
+                                {{ $user->roles->first()?->display_name ?: $user->roles->first()?->name ?: __('No role') }}
                             </td>
 
                             <td class="hidden whitespace-nowrap px-6 py-3 text-neutral-600 lg:table-cell dark:text-neutral-300">
