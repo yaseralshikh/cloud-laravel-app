@@ -126,6 +126,6 @@ class Index extends Component
             ->paginate(15);
 
         return view('livewire.users.index', compact('users'))
-            ->layout('components.layouts.app', ['title' => __('Users')]);
+            ->layout('layouts.app', ['title' => __('Users')]);
     }
 }
