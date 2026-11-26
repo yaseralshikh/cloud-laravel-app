@@ -35,6 +35,12 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function openCreateModal(): void
+    {
+        $this->resetForm();
+        $this->showCreateModal = true;
+    }
+
     public function createUser(): void
     {
         $validated = $this->validate([

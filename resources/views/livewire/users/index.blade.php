@@ -5,7 +5,7 @@
             <flux:subheading>{{ __('Manage registered users.') }}</flux:subheading>
         </div>
 
-        <flux:button icon="plus" variant="primary" wire:click="$set('showCreateModal', true)">
+        <flux:button icon="plus" variant="primary" wire:click="openCreateModal">
             {{ __('Add User') }}
         </flux:button>
     </div>
