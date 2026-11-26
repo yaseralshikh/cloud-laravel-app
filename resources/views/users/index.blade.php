@@ -12,15 +12,29 @@
         </div>
 
         @if (session('status'))
-            <flux:callout variant="success" icon="check-circle">
-                {{ session('status') }}
-            </flux:callout>
+            <div
+                x-data="{ show: true }"
+                x-init="setTimeout(() => show = false, 4000)"
+                x-show="show"
+                x-transition.opacity.duration.500ms
+            >
+                <flux:callout variant="success" icon="check-circle">
+                    {{ session('status') }}
+                </flux:callout>
+            </div>
         @endif
 
         @if (session('error'))
-            <flux:callout variant="danger" icon="exclamation-circle">
-                {{ session('error') }}
-            </flux:callout>
+            <div
+                x-data="{ show: true }"
+                x-init="setTimeout(() => show = false, 6000)"
+                x-show="show"
+                x-transition.opacity.duration.500ms
+            >
+                <flux:callout variant="danger" icon="exclamation-circle" dismissible>
+                    {{ session('error') }}
+                </flux:callout>
+            </div>
         @endif
 
         <div class="flex flex-wrap items-end justify-between gap-3">
@@ -63,7 +77,7 @@
 
                                         @unless ($user->is(auth()->user()))
                                             <flux:modal.trigger name="delete-user-{{ $user->id }}">
-                                                <flux:button size="sm" icon="trash-2" variant="danger">{{ __('Delete') }}</flux:button>
+                                                <flux:button size="sm" icon="trash" variant="danger">{{ __('Delete') }}</flux:button>
                                             </flux:modal.trigger>
                                         @endunless
                                     </div>

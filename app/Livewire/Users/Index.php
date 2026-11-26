@@ -49,11 +49,13 @@ class Index extends Component
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        $user->addRole('user');
 
         $this->resetForm();
         $this->showCreateModal = false;
