@@ -13,15 +13,16 @@
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        {{ __('messages.dashboard') }}
                     </flux:sidebar.item>
+
                     @role('superadmin')
                     <flux:sidebar.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
-                        {{ __('Users') }}
+                        {{ __('messages.users') }}
                     </flux:sidebar.item>
                     
                     <flux:sidebar.item icon="shield-check" :href="route('laratrust.roles.index')" :current="request()->routeIs('laratrust.*')" wire:navigate>
-                        {{ __('Roles') }}
+                        {{ __('messages.roles') }}
                     </flux:sidebar.item>
                     @endrole
                 </flux:sidebar.group>
@@ -30,16 +31,25 @@
             <flux:spacer />
 
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
+                {{-- <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
                     {{ __('Repository') }}
                 </flux:sidebar.item>
 
                 <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
                     {{ __('Documentation') }}
-                </flux:sidebar.item>
+                </flux:sidebar.item> --}}
+        
+                <form method="POST"
+                    action="{{ route('language.update', app()->isLocale('ar') ? 'en' : 'ar') }}">
+                    @csrf
+    
+                    <flux:button type="submit" variant="ghost" class="w-full">
+                        {{ app()->isLocale('ar') ? 'English' : 'العربية' }}
+                    </flux:button>
+                </form>              
             </flux:sidebar.nav>
 
-            <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
+            <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />              
         </flux:sidebar>
 
         <!-- Mobile User Menu -->
