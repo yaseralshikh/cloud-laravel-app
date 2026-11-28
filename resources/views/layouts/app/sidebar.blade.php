@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}" class="dark">
+=======
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="dark">
+>>>>>>> d759641db18ddcef4a75a39aaa31621f071e91c8
     <head>
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:sidebar sticky stashable collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
@@ -31,6 +35,7 @@
             <flux:spacer />
 
             <flux:sidebar.nav>
+<<<<<<< HEAD
                 {{-- <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
                     {{ __('messages.repository') }}
                 </flux:sidebar.item>
@@ -39,6 +44,8 @@
                     {{ __('messages.documentation') }}
                 </flux:sidebar.item> --}}
         
+=======
+>>>>>>> d759641db18ddcef4a75a39aaa31621f071e91c8
                 <form method="POST"
                     action="{{ route('language.update', app()->isLocale('ar') ? 'en' : 'ar') }}">
                     @csrf
