@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Users\Index;
+use App\Models\Role;
 use App\Models\User;
 use Livewire\Livewire;
 
@@ -14,13 +15,17 @@ test('users page renders and supports search', function () {
     User::factory()->create(['name' => 'Unrelated Person']);
 
     Livewire::test(Index::class)
+        ->assertSeeHtml('style="display: none" wire:loading.delay.short')
         ->set('search', 'Searchable')
         ->assertSee('Searchable Person')
         ->assertDontSee('Unrelated Person');
 });
 
 test('users can be created', function () {
+    Role::create(['name' => 'user']);
+
     Livewire::test(Index::class)
+        ->call('openCreateModal')
         ->set('name', 'New User')
         ->set('email', 'new-user@example.com')
         ->set('password', 'password123')
@@ -33,6 +38,7 @@ test('users can be created', function () {
 
 test('users can be updated and deleted but not self-deleted', function () {
     $target = User::factory()->create();
+    $target->addRole(Role::create(['name' => 'user']));
 
     Livewire::test(Index::class)
         ->call('editUser', $target->id)

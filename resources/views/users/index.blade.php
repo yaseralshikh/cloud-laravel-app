@@ -1,13 +1,13 @@
-<x-layouts::app :title="__('Users')">
+<x-layouts::app :title="__('messages.users')">
     <div class="flex flex-col gap-6">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-                <flux:heading size="xl">{{ __('Users') }}</flux:heading>
-                <flux:subheading>{{ __('Manage registered users.') }}</flux:subheading>
+                <flux:heading size="xl">{{ __('messages.users') }}</flux:heading>
+                <flux:subheading>{{ __('messages.manage-users') }}</flux:subheading>
             </div>
 
             <flux:modal.trigger name="create-user">
-                <flux:button icon="plus" variant="primary">{{ __('Add User') }}</flux:button>
+                <flux:button icon="plus" variant="primary">{{ __('messages.add-user') }}</flux:button>
             </flux:modal.trigger>
         </div>
 
@@ -43,11 +43,11 @@
                     name="search"
                     icon="magnifying-glass"
                     value="{{ $search }}"
-                    placeholder="{{ __('Search by name or email') }}"
+                    placeholder="{{ __('messages.search-by-name-or-email') }}"
                 />
-                <flux:button type="submit" variant="primary">{{ __('Search') }}</flux:button>
+                <flux:button type="submit" variant="primary">{{ __('messages.search') }}</flux:button>
                 @if ($search !== '')
-                    <flux:button :href="route('users.index')" variant="ghost">{{ __('Clear') }}</flux:button>
+                    <flux:button :href="route('users.index')" variant="ghost">{{ __('messages.clear') }}</flux:button>
                 @endif
             </form>
         </div>
@@ -57,10 +57,10 @@
                 <table class="w-full text-left text-sm">
                     <thead class="bg-neutral-50 text-neutral-600 dark:bg-zinc-800 dark:text-neutral-300">
                         <tr>
-                            <th scope="col" class="px-6 py-3 font-medium">{{ __('Name') }}</th>
-                            <th scope="col" class="px-6 py-3 font-medium">{{ __('Email') }}</th>
-                            <th scope="col" class="px-6 py-3 font-medium">{{ __('Joined') }}</th>
-                            <th scope="col" class="px-6 py-3 text-right font-medium">{{ __('Actions') }}</th>
+                            <th scope="col" class="px-6 py-3 font-medium">{{ __('messages.name') }}</th>
+                            <th scope="col" class="px-6 py-3 font-medium">{{ __('messages.email') }}</th>
+                            <th scope="col" class="px-6 py-3 font-medium">{{ __('messages.joined') }}</th>
+                            <th scope="col" class="px-6 py-3 text-right font-medium">{{ __('messages.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -72,12 +72,12 @@
                                 <td class="px-6 py-4">
                                     <div class="flex justify-end gap-2">
                                         <flux:modal.trigger name="edit-user-{{ $user->id }}">
-                                            <flux:button size="sm" icon="pencil" variant="ghost">{{ __('Edit') }}</flux:button>
+                                            <flux:button size="sm" icon="pencil" variant="ghost">{{ __('messages.edit') }}</flux:button>
                                         </flux:modal.trigger>
 
                                         @unless ($user->is(auth()->user()))
                                             <flux:modal.trigger name="delete-user-{{ $user->id }}">
-                                                <flux:button size="sm" icon="trash" variant="danger">{{ __('Delete') }}</flux:button>
+                                                <flux:button size="sm" icon="trash" variant="danger">{{ __('messages.delete') }}</flux:button>
                                             </flux:modal.trigger>
                                         @endunless
                                     </div>
@@ -87,15 +87,15 @@
                                             @csrf
                                             @method('PUT')
                                             <div>
-                                                <flux:heading size="lg">{{ __('Edit User') }}</flux:heading>
-                                                <flux:subheading>{{ __('Update this user account.') }}</flux:subheading>
+                                                <flux:heading size="lg">{{ __('messages.edit-user') }}</flux:heading>
+                                                <flux:subheading>{{ __('messages.edit-user-description') }}</flux:subheading>
                                             </div>
 
                                             <div class="space-y-4">
-                                                <flux:input name="name" label="{{ __('Name') }}" value="{{ old('name') ?: $user->name }}" required />
-                                                <flux:input name="email" type="email" label="{{ __('Email') }}" value="{{ old('email') ?: $user->email }}" required />
-                                                <flux:input name="password" type="password" label="{{ __('New Password') }}" placeholder="{{ __('Leave blank to keep current password') }}" />
-                                                <flux:input name="password_confirmation" type="password" label="{{ __('Confirm New Password') }}" />
+                                                <flux:input name="name" label="{{ __('messages.name') }}" value="{{ old('name') ?: $user->name }}" required />
+                                                <flux:input name="email" type="email" label="{{ __('messages.email') }}" value="{{ old('email') ?: $user->email }}" required />
+                                                <flux:input name="password" type="password" label="{{ __('messages.new-password') }}" placeholder="{{ __('messages.keep-current-password') }}" />
+                                                <flux:input name="password_confirmation" type="password" label="{{ __('messages.confirm-new-password') }}" />
                                             </div>
 
                                             @if ($errors->any())
@@ -110,9 +110,9 @@
 
                                             <div class="flex justify-end gap-2">
                                                 <flux:modal.close>
-                                                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                                                    <flux:button variant="ghost">{{ __('messages.cancel') }}</flux:button>
                                                 </flux:modal.close>
-                                                <flux:button type="submit" variant="primary">{{ __('Save Changes') }}</flux:button>
+                                                <flux:button type="submit" variant="primary">{{ __('messages.save-changes') }}</flux:button>
                                             </div>
                                         </form>
                                     </flux:modal>
@@ -123,14 +123,14 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <div>
-                                                    <flux:heading size="lg">{{ __('Delete User') }}</flux:heading>
-                                                    <flux:subheading>{{ __('Are you sure you want to delete :name?', ['name' => $user->name]) }}</flux:subheading>
+                                                    <flux:heading size="lg">{{ __('messages.delete-user') }}</flux:heading>
+                                                    <flux:subheading>{{ __('messages.confirm-delete-user', ['name' => $user->name]) }}</flux:subheading>
                                                 </div>
                                                 <div class="flex justify-end gap-2">
                                                     <flux:modal.close>
-                                                        <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                                                        <flux:button variant="ghost">{{ __('messages.cancel') }}</flux:button>
                                                     </flux:modal.close>
-                                                    <flux:button type="submit" variant="danger">{{ __('Delete') }}</flux:button>
+                                                    <flux:button type="submit" variant="danger">{{ __('messages.delete') }}</flux:button>
                                                 </div>
                                             </form>
                                         </flux:modal>
@@ -140,7 +140,7 @@
                         @empty
                             <tr>
                                 <td colspan="4" class="px-6 py-8 text-center text-neutral-600 dark:text-neutral-300">
-                                    {{ $search !== '' ? __('No users match your search.') : __('No users found.') }}
+                                    {{ $search !== '' ? __('messages.no-matching-users') : __('messages.no-users') }}
                                 </td>
                             </tr>
                         @endforelse
@@ -160,15 +160,15 @@
         <form method="POST" action="{{ route('users.store') }}" class="space-y-6">
             @csrf
             <div>
-                <flux:heading size="lg">{{ __('Add User') }}</flux:heading>
-                <flux:subheading>{{ __('Create a new user account.') }}</flux:subheading>
+                <flux:heading size="lg">{{ __('messages.add-user') }}</flux:heading>
+                <flux:subheading>{{ __('messages.create-user-description') }}</flux:subheading>
             </div>
 
             <div class="space-y-4">
-                <flux:input name="name" label="{{ __('Name') }}" value="{{ old('name') }}" required />
-                <flux:input name="email" type="email" label="{{ __('Email') }}" value="{{ old('email') }}" required />
-                <flux:input name="password" type="password" label="{{ __('Password') }}" required />
-                <flux:input name="password_confirmation" type="password" label="{{ __('Confirm Password') }}" required />
+                <flux:input name="name" label="{{ __('messages.name') }}" value="{{ old('name') }}" required />
+                <flux:input name="email" type="email" label="{{ __('messages.email') }}" value="{{ old('email') }}" required />
+                <flux:input name="password" type="password" label="{{ __('messages.password') }}" required />
+                <flux:input name="password_confirmation" type="password" label="{{ __('messages.confirm-password') }}" required />
             </div>
 
             @if ($errors->any())
@@ -183,9 +183,9 @@
 
             <div class="flex justify-end gap-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                    <flux:button variant="ghost">{{ __('messages.cancel') }}</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary">{{ __('Create User') }}</flux:button>
+                <flux:button type="submit" variant="primary">{{ __('messages.create-user') }}</flux:button>
             </div>
         </form>
     </flux:modal>

@@ -11,6 +11,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('users', UsersIndex::class)->name('users.index');
 });
 
+Route::middleware(['auth', 'verified', 'role:superadmin'])->group(function () {
+    Route::get('users', UsersIndex::class)->name('users.index');
+});
+
 Route::post('/language/{locale}', function (Request $request, string $locale) {
     $request->session()->put('locale', $locale);
 

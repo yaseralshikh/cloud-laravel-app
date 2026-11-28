@@ -1,13 +1,13 @@
-<x-layouts::auth :title="__('Register')">
+<x-layouts::auth :title="__('messages.registration')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+        <x-auth-header :title="__('messages.register')" :description="__('messages.registration-description')" />
 
-        <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-6">
+        <form method="POST" action="{{ route('register.store') }}" data-submit-loading class="flex flex-col gap-6">
             @csrf
 
             <flux:input
                 name="name"
-                :label="__('Name')"
+                :label="__('messages.name')"
                 :value="old('name')"
                 type="text"
                 required
@@ -17,7 +17,7 @@
 
             <flux:input
                 name="email"
-                :label="__('Email address')"
+                :label="__('messages.email-address')"
                 :value="old('email')"
                 type="email"
                 required
@@ -26,7 +26,7 @@
 
             <flux:input
                 name="password"
-                :label="__('Password')"
+                :label="__('messages.password')"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -35,7 +35,7 @@
 
             <flux:input
                 name="password_confirmation"
-                :label="__('Confirm password')"
+                :label="__('messages.confirm-password')"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -43,13 +43,13 @@
             />
 
             <flux:button variant="primary" type="submit" class="w-full">
-                {{ __('Create account') }}
+                {{ __('messages.create-account') }}
             </flux:button>
         </form>
 
         <flux:text class="text-center">
-            {{ __('Already have an account?') }}
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+            {{ __('messages.already-have-account') }}
+            <flux:link :href="route('login')" wire:navigate>{{ __('messages.log-in') }}</flux:link>
         </flux:text>
     </div>
 </x-layouts::auth>

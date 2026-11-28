@@ -3,6 +3,7 @@
 namespace App\Livewire\Users;
 
 use App\Models\User;
+use Flux\Flux;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Url;
@@ -39,7 +40,7 @@ class Index extends Component
     public function roles(): array
     {
         return Role::orderBy('id')->get()
-            ->mapWithKeys(fn ($r) => [$r->name => $r->display_name ?: $r->name])
+            ->mapWithKeys(fn (Role $role) => [$role->name => $role->translatedDisplayName()])
             ->all();
     }
 
@@ -75,7 +76,7 @@ class Index extends Component
 
         $this->resetForm();
         $this->showCreateModal = false;
-        session()->flash('status', __('User created successfully.'));
+        session()->flash('status', __('messages.user-created'));
     }
 
     public function editUser(int $userId): void
@@ -87,9 +88,9 @@ class Index extends Component
         $this->email = $user->email;
         $this->password = '';
         $this->password_confirmation = '';
-        $this->resetValidation();
         $this->showEditModal = true;
         $this->role = $user->roles->first()?->name ?? '';
+        $this->resetValidation();
     }
 
     public function updateUser(): void
@@ -119,21 +120,22 @@ class Index extends Component
 
         $this->resetForm();
         $this->showEditModal = false;
-        session()->flash('status', __('User updated successfully.'));
+        session()->flash('status', __('messages.user-updated'));
     }
 
     public function deleteUser(int $userId): void
     {
         $user = User::findOrFail($userId);
+        Flux::modal('delete-user')->close();
 
         if ($user->is(auth()->user())) {
-            session()->flash('error', __('You cannot delete your own account.'));
+            session()->flash('error', __('messages.cannot-delete-own-account'));
 
             return;
         }
 
         $user->delete();
-        session()->flash('status', __('User deleted successfully.'));
+        session()->flash('status', __('messages.user-deleted'));
     }
 
     private function resetForm(): void
@@ -157,6 +159,6 @@ class Index extends Component
             ->paginate(15);
 
         return view('livewire.users.index', compact('users'))
-            ->layout('layouts.app', ['title' => __('Users')]);
+            ->layout('layouts.app', ['title' => __('messages.users')]);
     }
 }

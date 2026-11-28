@@ -15,19 +15,21 @@ test('security settings page can be rendered', function () {
     $response->assertOk();
 });
 
-test('security settings page renders without two factor when feature is disabled', function () {
+test('security settings page renders without two factor when feature is disabled', function (string $locale) {
     config(['fortify.features' => []]);
 
     $user = User::factory()->create();
 
     $this->actingAs($user)
+        ->withSession(['locale' => $locale])
         ->get(route('security.edit'))
         ->assertOk()
-        ->assertSee('Update password')
+        ->assertSee(__('messages.update-password', [], $locale))
+        ->assertSeeHtml('<html lang="'.$locale.'"')
         ->assertDontSee('Manage your passkeys for passwordless sign-in')
         ->assertDontSee('Add a passkey to sign in without a password')
         ->assertDontSee('Two-factor authentication');
-});
+})->with(['ar', 'en']);
 
 test('password can be updated', function () {
     $user = User::factory()->create([
